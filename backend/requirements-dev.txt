@@ -1,0 +1,3 @@
+-r requirements.txt
+pytest==8.*
+# httpx (used by FastAPI's TestClient) is already installed as a LiteLLM dependency.

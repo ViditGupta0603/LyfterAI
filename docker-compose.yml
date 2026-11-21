@@ -1,0 +1,31 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      target: runtime
+    env_file: .env
+    environment:
+      # Inside the container, data always lives on the named volume.
+      DATABASE_URL: sqlite:////data/app.db
+      CACHE_DIR: /data/llm_cache
+    ports:
+      - "8000:8000"
+    volumes:
+      - app_data:/data
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      # The browser calls the backend directly, so this is the host-visible URL.
+      API_URL: ${PUBLIC_API_URL:-http://localhost:8000}
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  app_data:

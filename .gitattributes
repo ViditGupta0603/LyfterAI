@@ -1,0 +1,4 @@
+# Shell scripts run inside Linux containers; CRLF line endings (Windows) would break them.
+*.sh      text eol=lf
+Makefile  text eol=lf
+Dockerfile text eol=lf

@@ -1,0 +1,17 @@
+# secrets
+.env
+# local data
+data/
+*.db
+*.db-wal
+*.db-shm
+llm_cache/
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+# node
+node_modules/
+dist/
