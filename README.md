@@ -227,7 +227,7 @@ in logs, persistence across a restart, and concurrent requests in one session.
 
 - Editor: VS Code
 - AI tools: Claude (Anthropic) for planning (a PRD/TRD with a failure catalogue), code,
-  tests and debugging. Design decisions were checked by running LiteLLM directly (cache
+  tests and debugging. Design decisions were checked in person directly (cache
   behaviour, exception types, version differences) and by measuring model latency.
 
 ## 6. Bonus features
