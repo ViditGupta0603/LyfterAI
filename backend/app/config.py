@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     enable_failure_simulation: bool = Field(default=False, alias="ENABLE_FAILURE_SIMULATION")
 
     # --- LLM ---
-    llm_model: str = Field(default="gemini/gemini-2.5-flash-lite", alias="LLM_MODEL")
+    llm_model: str = Field(default="gemini/gemini-3.5-flash-lite", alias="LLM_MODEL")
     # Unset by default: Gemini 3+ deprecates sampling params (LiteLLM warns on every call).
     # If set, it is sent on every call, so it stays a constant part of the cache key.
     temperature: float | None = Field(default=None, alias="TEMPERATURE")

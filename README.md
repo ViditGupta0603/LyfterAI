@@ -8,12 +8,15 @@ the source, model, latency and per-request token usage next to every reply.
 
 | | URL |
 | --- | --- |
-| Frontend | _to be added after deployment_ |
-| Backend | _to be added after deployment_ (`/health`) |
-| Demo video | _to be added_ |
+| Frontend (Vercel) | https://lyfterai.vercel.app |
+| Backend (Railway) | https://lyfterai-production.up.railway.app ([`/health`](https://lyfterai-production.up.railway.app/health)) |
+| Repository | https://github.com/ViditGupta0603/LyfterAI |
+| Demo video | https://drive.google.com/file/d/19C6cIGzkOaKoPBsQcunyGPQn2T5GzdIn/view?usp=sharing |
 
 The deployed backend runs with `ENABLE_FAILURE_SIMULATION=true`, so the failover hook can
-be tried directly against it.
+be tried directly against it. It is on Railway's free plan, which sleeps after a few minutes
+without traffic: the first request after a pause can take 10-30 s while it wakes. History and
+cache are on a persistent volume, so nothing is lost while it sleeps.
 
 ## 2. Run locally
 
@@ -70,7 +73,7 @@ All configuration is through environment variables; `.env.example` lists every o
 | `DATABASE_URL` | `sqlite:////data/app.db` | SQLite location |
 | `ALLOWED_ORIGINS` | `http://localhost:3000` | Comma-separated CORS origins |
 | `ENABLE_FAILURE_SIMULATION` | `false` | Enables the `X-Simulate-Failure` hook |
-| `LLM_MODEL` | `gemini/gemini-2.5-flash-lite` | LiteLLM model name |
+| `LLM_MODEL` | `gemini/gemini-3.5-flash-lite` | LiteLLM model name |
 | `CACHE_DIR` | `/data/llm_cache` | LiteLLM disk cache directory |
 | `CACHE_ENABLED` / `CACHE_TTL_SECONDS` | `true` / unset | Cache switch and optional expiry |
 | `DEFAULT_SYSTEM_PROMPT` | `You are a helpful assistant.` | Used when a session has none |
@@ -161,10 +164,17 @@ POST /chat
 
 ### Model choice
 
-`gemini/gemini-2.5-flash-lite`. Measured on 20 Nov 2026 with one tiny request per model:
-2.5 Flash-Lite answered in about 1 s, the 3.5 / 3.6 Flash models took 10-30 s, and 3.7 /
-3.8 returned 503 "overloaded". `gemini-2.0-flash` (the example in the brief) was shut down
-by Google on 1 June 2026.
+`gemini/gemini-3.5-flash-lite`, chosen by measuring one small request per available Flash model
+**with each key** (21 Nov 2026): 3.5 Flash-Lite answered in about 0.66 s on both keys, while
+3.5 / 3.6 / 3.7 / 3.8 Flash took 20-40 s, timed out or returned 503 "overloaded".
+
+The first choice, 2.5 Flash-Lite, was fast on key_1 but returned 404 "no longer available to
+new users" on key_2, because key_2 belongs to a newly created Google project. The deployed
+failover surfaced this: with `X-Simulate-Failure: key_1=429`, key_2's real 404 was correctly
+treated as a key failure and the request ended in a clean 503. Since the model is part of the
+cache key and both keys must be able to answer the same request, the model has to be available
+to every project in the pool. `gemini-2.0-flash` (the example in the brief) was shut down by
+Google on 1 June 2026.
 
 ## 4. Verification
 

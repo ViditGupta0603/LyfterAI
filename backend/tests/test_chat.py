@@ -23,7 +23,7 @@ def test_live_response_matches_contract(client, provider):
     meta = body["metadata"]
     assert METADATA_FIELDS <= set(meta)
     assert meta["resolution_source"] == "LIVE_INFERENCE"
-    assert meta["model"] == "gemini/gemini-2.5-flash-lite"
+    assert meta["model"] == "gemini/gemini-3.5-flash-lite"
     assert isinstance(meta["latency_ms"], int) and meta["latency_ms"] >= 0
     assert isinstance(meta["input_tokens"], int) and meta["input_tokens"] > 0
     assert isinstance(meta["output_tokens"], int) and meta["output_tokens"] > 0

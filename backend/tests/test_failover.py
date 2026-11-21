@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 from app.main import create_app
 from tests.conftest import KEY_1, KEY_2, chat
 
-P = dict(llm_provider="gemini", model="gemini-2.5-flash-lite")
+P = dict(llm_provider="gemini", model="gemini-3.5-flash-lite")
 
 
 def _status(exc, code):

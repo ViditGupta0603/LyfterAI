@@ -69,7 +69,7 @@ def make_settings(tmp_path) -> Callable[..., Settings]:
     def _make(**overrides: Any) -> Settings:
         values = dict(
             LLM_API_KEYS=f"{KEY_1},{KEY_2}",
-            LLM_MODEL="gemini/gemini-2.5-flash-lite",
+            LLM_MODEL="gemini/gemini-3.5-flash-lite",
             DATABASE_URL=f"sqlite:///{tmp_path / 'data' / 'app.db'}",
             CACHE_DIR=str(tmp_path / "data" / "llm_cache"),
             ALLOWED_ORIGINS="https://frontend.example.app",

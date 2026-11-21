@@ -1,5 +1,6 @@
-r"""Time one tiny generateContent call per available Flash model. Run from the repo root:
-    backend\.venv\Scripts\python scripts\diag_models.py
+r"""Time one tiny generateContent call per available Flash model, for one key of the pool.
+Run from the repo root (N = 1 for key_1, 2 for key_2; default 1):
+    backend\.venv\Scripts\python scripts\diag_models.py 2
 Prints model ids and timings only; never prints the key."""
 
 import os
@@ -13,7 +14,9 @@ import httpx  # noqa: E402
 
 from app.config import Settings  # noqa: E402
 
-key = Settings().keys[0].secret
+index = int(sys.argv[1]) if len(sys.argv) > 1 else 1
+key = Settings().keys[index - 1].secret
+print(f"Testing with key_{index}")
 base = "https://generativelanguage.googleapis.com/v1beta"
 headers = {"x-goog-api-key": key}
 
