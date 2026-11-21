@@ -23,6 +23,8 @@ ENV PATH=/opt/venv/bin:$PATH \
     PORT=8000 \
     DATABASE_URL=sqlite:////data/app.db \
     CACHE_DIR=/data/llm_cache
+# /data is provided by a mounted volume: docker-compose named volume locally, a platform
+# volume (e.g. Railway) in production. No VOLUME instruction: some hosts reject it.
 RUN useradd --create-home --uid 10001 app \
     && mkdir -p /data \
     && chown app:app /data
@@ -30,7 +32,6 @@ COPY --from=builder /opt/venv /opt/venv
 WORKDIR /app
 COPY app ./app
 USER app
-VOLUME ["/data"]
 EXPOSE 8000
 HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=5 \
     CMD python -c "import os, urllib.request; urllib.request.urlopen('http://127.0.0.1:' + os.environ.get('PORT', '8000') + '/health', timeout=4)"
